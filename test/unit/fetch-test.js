@@ -38,3 +38,27 @@ test('fetch without state', function (t) {
     t.equal(error.name, 'UnauthenticatedError', 'rejects with UnauthenticatedError error')
   })
 })
+
+test('fetch with unauthenticated state', function (t) {
+  var error = new Error('NotFound')
+  error.name = 'NotFoundError'
+  error.status = 404
+  simple.mock(internals, 'fetchProperties').rejectWith(error)
+
+  t.plan(1)
+
+  fetch({
+    baseUrl: 'http://example.com',
+    account: {
+      session: {
+        id: 'abc4567'
+      }
+    }
+  }, 'path')
+
+  .then(t.fail.bind(t, 'Must reject'))
+  .catch(function (error) {
+    console.log(error)
+    t.equal(error.name, 'UnauthenticatedError', 'rejects with UnauthenticatedError error')
+  })
+})
