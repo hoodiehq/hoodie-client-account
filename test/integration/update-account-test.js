@@ -31,13 +31,19 @@ test('sign in and change username', function (t) {
       return body.data.attributes.password === 'secret'
     })
     .reply(201, signInResponse)
-    .delete('/session')
+    .delete('/session', {
+      reqheaders: {
+        'Authorization': 'bearer ' + signInResponseAfterUpdate.data.id
+      }
+    })
     .reply(204)
     .patch('/session/account', function (body) {
       t.is(body.data.attributes.password, 'newsecret', 'request uses new password')
       return true
     })
-    .reply(200, updateResponse)
+    .reply(200, updateResponse, {
+      'x-set-session': signInResponseAfterUpdate.data.id
+    })
     .put('/session', function (body) {
       return body.data.attributes.password === 'newsecret'
     })
