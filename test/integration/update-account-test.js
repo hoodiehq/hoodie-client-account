@@ -16,12 +16,10 @@ var options = {
   password: 'secret'
 }
 
-var uniqueId = 1
-
 test('sign in and change username', function (t) {
   store.clear()
 
-  t.plan(11)
+  t.plan(10)
 
   var account = new Account({
     url: baseURL,
@@ -33,27 +31,28 @@ test('sign in and change username', function (t) {
       return body.data.attributes.password === 'secret'
     })
     .reply(201, signInResponse)
-    .delete('/session')
+    .delete('/session', {
+      reqheaders: {
+        'Authorization': 'bearer ' + signInResponseAfterUpdate.data.id
+      }
+    })
     .reply(204)
     .patch('/session/account', function (body) {
       t.is(body.data.attributes.password, 'newsecret', 'request uses new password')
       return true
     })
-    .reply(200, updateResponse)
+    .reply(200, updateResponse, {
+      'x-set-session': signInResponseAfterUpdate.data.id
+    })
     .put('/session', function (body) {
       return body.data.attributes.password === 'newsecret'
     })
-    .thrice()
-    .reply(201, function () {
-      // Session is updated everytime a user puts
-      signInResponseAfterUpdate.data.id = 'session' + (uniqueId++)
-      return signInResponseAfterUpdate
-    })
+    .reply(201, signInResponseAfterUpdate)
 
   account.signIn(options)
 
   .then(function (signInResult) {
-    t.pass('signs in')
+    t.pass('signes in')
     t.is(signInResult.username, 'chicken@docs.com')
 
     return account.update({ username: 'newchicken@docs.com', password: 'newsecret' })
@@ -63,7 +62,6 @@ test('sign in and change username', function (t) {
     t.pass('update resultResult received')
     t.is(updateResult.username, 'newchicken@docs.com', 'new account name in result')
     t.is(account.username, 'newchicken@docs.com', 'account username set to new one')
-    t.is(updateResult.session.id, account.get('session.id'), 'account session should be the same as the result')
 
     return account.signOut()
   })
