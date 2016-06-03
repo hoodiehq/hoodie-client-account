@@ -29,7 +29,7 @@ test('sign out', function (t) {
   })
 
   account.on('signout', function () {
-    t.is(account.isSignedIn(), false)
+    t.is(account.isSignedIn(), true)
   })
   account.signOut().catch(t.error)
 })
