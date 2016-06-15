@@ -11,7 +11,8 @@ var signInResponse = require('../fixtures/signin.json')
 var updateResponse = require('../fixtures/update.json')
 var options = {
   username: signUpResponse.data.attributes.username,
-  password: 'secret'
+  password: 'secret',
+  include: 'account.profile'
 }
 
 test('events', function (t) {
@@ -71,7 +72,8 @@ test('events', function (t) {
     t.deepEqual(signInHandler.lastCall.arg, {
       id: 'abc4567',
       username: 'chicken@docs.com',
-      session: { id: 'sessionid123' }
+      session: { id: 'sessionid123' },
+      profile: {}
     }, '"signin" event emitted with account object')
 
     return account.update({username: updateResponse.data.attributes.username})
@@ -86,7 +88,8 @@ test('events', function (t) {
     t.deepEqual(updateHandler.lastCall.arg, {
       id: 'abc4567',
       username: 'newchicken@docs.com',
-      session: { id: 'sessionid123' }
+      session: { id: 'sessionid123' },
+      profile: {}
     }, '"update" event emitted with account object')
 
     return account.signOut()
@@ -96,7 +99,8 @@ test('events', function (t) {
     t.deepEqual(signOutHandler.lastCall.arg, {
       id: 'abc4567',
       username: 'newchicken@docs.com',
-      session: { id: 'sessionid123' }
+      session: { id: 'sessionid123' },
+      profile: {}
     }, '"signout" event emitted with account object')
 
     t.is(signUpHandler.callCount, 1, '"signup" event emitted once')
