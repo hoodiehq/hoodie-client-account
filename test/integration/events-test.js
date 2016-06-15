@@ -25,7 +25,7 @@ test('events', function (t) {
   nock(baseURL)
     .put('/session/account')
     .reply(201, signUpResponse)
-    .put('/session').thrice()
+    .put('/session?include=account.profile').thrice()
     .reply(201, signInResponse)
     .patch('/session/account')
     .reply(201, updateResponse)
