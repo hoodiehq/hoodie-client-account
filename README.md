@@ -1033,7 +1033,7 @@ To run only the tests
 npm run test:node
 ```
 
-To test hoodie-account-client in a browser you can link it into hoodie-account, which provides a dev-server:
+To test hoodie-account-client in a browser you can link it into [hoodie-account](https://github.com/hoodiehq/hoodie-account), which provides a dev-server:
 
 ```
 git clone https://github.com/hoodiehq/hoodie-account.git
