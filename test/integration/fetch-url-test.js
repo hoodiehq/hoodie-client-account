@@ -5,7 +5,7 @@ var test = require('tape')
 var Account = require('../../index')
 
 test('account.fetch() and account.profil.fetch()', function (t) {
-  t.plan(1)
+  t.plan(3)
 
   store.setObject('account', {
     username: 'john-doe',
@@ -28,11 +28,14 @@ test('account.fetch() and account.profil.fetch()', function (t) {
 
   account.fetch()
 
-  .then(function () {
+  .then(function (accountProperties) {
+    t.same(accountProperties, {id: 'abc4567', username: 'john-doe'})
+
     return account.profile.fetch()
   })
 
-  .then(function () {
+  .then(function (profileProperties) {
+    t.same(profileProperties, {fullName: 'Docs Chicken', favoriteClothing: 'Hoodie'})
     t.is(apiMock.pendingMocks()[0], undefined, 'all mocks satisfied')
   })
 

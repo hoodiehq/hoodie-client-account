@@ -6,7 +6,6 @@ var accountsFindAll = require('../accounts/find-all')
 var internals = {}
 internals.request = require('../../../utils/request')
 internals.deserialise = require('../../../utils/deserialise')
-internals.serialise = require('../../../utils/serialise')
 
 function add (state, options) {
   if (!options || !options.username) {
@@ -30,7 +29,7 @@ function add (state, options) {
         url: state.url + '/accounts/' + accountInfo.id + '/sessions',
         method: 'POST',
         headers: {
-          authorization: 'Bearer ' + state.account.session.id
+          authorization: 'Session ' + state.account.session.id
         }
       })
     }).then(function (response) {
