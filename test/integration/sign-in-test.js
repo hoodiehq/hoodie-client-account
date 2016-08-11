@@ -11,7 +11,8 @@ var signInResponse = clone(require('../fixtures/signin.json'))
 
 var options = {
   username: 'chicken@docs.com',
-  password: 'secret'
+  password: 'secret',
+  include: 'account.profile'
 }
 
 test('sign in', function (t) {
@@ -43,14 +44,16 @@ test('sign in', function (t) {
       username: 'chicken@docs.com',
       session: {
         id: 'sessionid123'
-      }
+      },
+      profile: {}
     }, 'stores account with id with session')
     t.deepEqual(account.get(), {
       id: 'abc4567',
       username: 'chicken@docs.com',
       session: {
         id: 'sessionid123'
-      }
+      },
+      profile: {}
     }, '.get() returns account with session')
 
     return account.signOut()
