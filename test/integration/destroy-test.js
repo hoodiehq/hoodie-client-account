@@ -73,10 +73,6 @@ test('destroy account even when session is invalid', function (t) {
     id: 'abc4567'
   })
 
-  nock(baseURL)
-  .delete('/session/account')
-  .reply(204)
-
   var signOutHandler = simple.stub()
   var destroyHandler = simple.stub()
   account.on('signout', signOutHandler)
