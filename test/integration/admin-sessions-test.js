@@ -11,6 +11,26 @@ var accountsUnauthenticatedResponse = require('../fixtures/accounts-401')
 // 2. a session id distinct from the session ids in all other fixtures
 var sessionsResponse = require('../fixtures/sessions')
 
+var makeCreateAdminSessionTest = function (admin) {
+  return function (t) {
+    nock('http://localhost:3000')
+      .get('/accounts')
+      .reply(200, accountsResponse)
+
+    admin.sessions.add({
+      username: 'patmin'
+    }).then(function (res) {
+      t.ok(res, 'session created for signed in admin')
+    }, function (err) {
+      t.notOk(err, 'got error not found')
+      t.equal(err.name, 'NotFoundError',
+              'correct error type')
+    }).then(function () {
+      t.end()
+    }).catch(t.error)
+  }
+}
+
 var makeAddUnauthenticatedTest = function (admin) {
   return function (t) {
     nock('http://localhost:3000')
@@ -152,6 +172,7 @@ var makeAddTest = function (admin) {
     t.test('account not found', makeAddNotFoundTest(admin))
     t.test('connection error', makeAddConnectionErrorTest(admin))
     t.test('add ok', makeAddOkTest(admin))
+    t.test('admin session created', makeCreateAdminSessionTest(admin))
     t.end()
   }
 }
