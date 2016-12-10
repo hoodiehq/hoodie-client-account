@@ -1,6 +1,7 @@
 module.exports = AccountAdmin
 
 var EventEmitter = require('events').EventEmitter
+var Hook = require('before-after-hook')
 
 var getAccount = require('../utils/get-account')
 
@@ -36,7 +37,8 @@ function AccountAdmin (options) {
     cacheKey: cacheKey,
     emitter: emitter,
     account: getAccount({cacheKey: cacheKey}),
-    url: options.url
+    url: options.url,
+    hook: new Hook()
   }
 
   var admin = {
@@ -68,7 +70,8 @@ function AccountAdmin (options) {
 
     on: events.on.bind(null, state),
     one: events.one.bind(null, state),
-    off: events.off.bind(null, state)
+    off: events.off.bind(null, state),
+    hook: state.hook.api
   }
 
   // sessions.add can use accounts.find to lookup user id by username

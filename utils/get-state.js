@@ -1,5 +1,6 @@
 module.exports = getState
 
+var Hook = require('before-after-hook')
 var EventEmitter = require('events').EventEmitter
 var get = require('lodash/get')
 
@@ -26,9 +27,10 @@ function getState (options) {
   })
 
   var state = {
+    account: storedAccount,
     cacheKey: cacheKey,
     emitter: options.emitter || new EventEmitter(),
-    account: storedAccount,
+    hook: new Hook(),
     url: options.url,
     validate: options.validate || function () {}
   }
