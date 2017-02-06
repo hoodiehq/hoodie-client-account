@@ -5,6 +5,7 @@ var test = require('tape')
 var AccountAdmin = require('../../admin/index')
 
 var accountsResponse = require('../fixtures/accounts')
+var adminAccountResponse = require('../fixtures/admin-account')
 var accountsUnauthenticatedResponse = require('../fixtures/accounts-401')
 // this fixture ought contain:
 // 1. an id matching one of the user accounts in the accounts fixture
@@ -141,6 +142,26 @@ var makeAddOkTest = function (admin) {
   }
 }
 
+var makeAddSessionTest = function (admin) {
+  return function (t) {
+    nock('http://localhost:3000')
+      .get('/accounts')
+      .reply(200, adminAccountResponse)
+
+    admin.sessions.add({
+      username: 'pat'
+    }).then(function (res) {
+      t.ok(res, 'created user session')
+    }, function (err) {
+      t.notOk(err, 'not found error')
+      t.equal(err.name, 'NotFoundError',
+              'correct error type')
+    }).then(function () {
+      t.end()
+    }).catch(t.error)
+  }
+}
+
 var makeAddTest = function (admin) {
   return function (t) {
     t.ok(admin.sessions.add, 'Sessions.add exists')
@@ -152,6 +173,7 @@ var makeAddTest = function (admin) {
     t.test('account not found', makeAddNotFoundTest(admin))
     t.test('connection error', makeAddConnectionErrorTest(admin))
     t.test('add ok', makeAddOkTest(admin))
+    t.test('session created', makeAddSessionTest(admin))
     t.end()
   }
 }
