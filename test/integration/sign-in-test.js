@@ -85,3 +85,36 @@ test('sign in', function (t) {
 
   .catch(t.error)
 })
+
+test('sign in while signed in fails', function (t) {
+  store.clear()
+  t.plan(2)
+
+  var account = new Account({
+    url: baseURL,
+    id: 'abc4567'
+  })
+
+  nock(baseURL)
+    .put('/session')
+    .reply(201, signInResponse)
+
+  account.signIn(options)
+
+  .then(function (signInResult) {
+    t.pass('signs in')
+
+    return account.signIn({
+      username: 'fox@docs.com',
+      password: 'secret'
+    })
+  })
+
+  .then(function () {
+    t.fail('Sign in must fail when already signed in')
+  })
+
+  .catch(function (error) {
+    t.is(error.message, 'You must sign out before signing in')
+  })
+})
