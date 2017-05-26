@@ -33,7 +33,7 @@ test('sign in', function (t) {
   account.signIn(options)
 
   .then(function (signInResult) {
-    t.pass('signes in')
+    t.pass('signs in')
     t.is(signInResult.username, 'chicken@docs.com')
 
     var storeAccount = store.getObject('account')
