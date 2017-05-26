@@ -88,7 +88,7 @@ test('sign in', function (t) {
 
 test('sign in while signed in fails', function (t) {
   store.clear()
-  t.plan(2)
+  t.plan(1)
 
   var account = new Account({
     url: baseURL,
@@ -102,8 +102,6 @@ test('sign in while signed in fails', function (t) {
   account.signIn(options)
 
   .then(function (signInResult) {
-    t.pass('signs in')
-
     return account.signIn({
       username: 'fox@docs.com',
       password: 'secret'
