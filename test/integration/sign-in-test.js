@@ -86,7 +86,7 @@ test('sign in', function (t) {
   .catch(t.error)
 })
 
-test('sign in while signed in fails', function (t) {
+test('prevent sign-in when already signed in', function (t) {
   store.clear()
   t.plan(1)
 
