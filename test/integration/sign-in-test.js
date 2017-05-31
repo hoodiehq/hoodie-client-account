@@ -62,7 +62,7 @@ test('sign in', function (t) {
   })
 
   .then(function (signOutResult) {
-    t.pass('signes out')
+    t.pass('signs out')
 
     t.is(signOutResult.username, 'chicken@docs.com')
 
