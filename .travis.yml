@@ -1,9 +1,4 @@
 language: node_js
-node_js:
-- 4
-- 6
-- 8
-- 9
 cache:
   directories:
   - ~/.npm
@@ -17,18 +12,14 @@ branches:
 
 jobs:
   include:
-    - script:
-        - npm run test
-      node_js:
-        - 4
-        - 6
-        - 8
-    - script:
+    - node_js: 4
+    - node_js: 6
+    - node_js: 8
+    - node_js: 9
+      script:
         - npm run test
         - npm run test:coverage
         - npm run test:coverage:upload
-      node_js:
-        -9
     - stage: release
       node_js: lts/*
       script:
