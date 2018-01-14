@@ -27,4 +27,8 @@ jobs:
     - script: 
         - npm run docs
         - npm run deploydocs
-      if: branch = master
+
+stages:
+  - test
+  - release
+    if: branch = master
